@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,6 +13,24 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
     private GameGenie plugin;
     public PlayerListener(GameGenie plugin){
         this.plugin = plugin;
+    }
+
+    @Override
+    public void onPlayerGameModeChange(PlayerGameModeChangeEvent e){
+        Player p = e.getPlayer();
+        switch(e.getNewGameMode()){
+            case SURVIVAL:
+                if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
+                ItemStack[] inventory = plugin.retrieveInventory(p);
+                if(inventory != null){
+                    p.getInventory().setContents(inventory);
+                }
+                break;
+            case CREATIVE:
+                plugin.storeInventory(p,p.getInventory().getContents());
+                if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
+                break;
+        }
     }
 
     @Override
