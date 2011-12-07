@@ -35,15 +35,20 @@ public class CommandGameGenie extends CommandHandler {
 
             Player p = playerList.get(0);
             if(p.getGameMode() == GameMode.CREATIVE){
-                //Store their current inventory
-                p.getInventory().setContents(plugin.retrieveInventory(p));
+                p.getInventory().clear();
+
+                ItemStack[] inventory = plugin.retrieveInventory(p);
+                if(inventory != null){
+                    p.getInventory().setContents(inventory);
+                }
+                
                 p.setGameMode(GameMode.SURVIVAL);
                 sender.sendMessage(ChatColor.GRAY + "Toggled game mode to " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + " for " + ChatColor.WHITE + p.getDisplayName());
                 p.sendMessage(ChatColor.GRAY + sender.getName() + " set your game mode to " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + ".");
             } else {
                 plugin.storeInventory(p,p.getInventory().getContents());
-                p.getInventory().clear();
                 p.setGameMode(GameMode.CREATIVE);
+                p.getInventory().clear();
                 sender.sendMessage(ChatColor.GRAY +"Toggled game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY +" for "+ ChatColor.WHITE + p.getDisplayName());
                 p.sendMessage(ChatColor.GRAY + sender.getName() + " set your game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY + ".");
             }
