@@ -20,9 +20,9 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         Player p = e.getPlayer();
         switch(e.getNewGameMode()){
             case SURVIVAL:
-                if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
                 ItemStack[] inventory = plugin.retrieveInventory(p);
                 if(inventory != null){
+                    if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
                     p.getInventory().setContents(inventory);
                 }
                 break;
@@ -42,6 +42,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
             if(inventory != null){
                 System.out.println(plugin.pdf.getName()+ "> Restored player inventory on logout for " + p.getName());
                 p.getInventory().setContents(inventory);
+                p.setGameMode(GameMode.SURVIVAL);
             }
         }
     }
