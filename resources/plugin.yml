@@ -20,3 +20,6 @@ permissions:
     gamegenie.bypasswipe:
         description: "When switching modes your inventory is wiped"
         default: false
+    gamegenie.notify:
+        description: "Get notified when someone changes the gamemode for another player"
+        default: op

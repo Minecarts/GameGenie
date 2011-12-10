@@ -38,10 +38,23 @@ public class CommandGameGenie extends CommandHandler {
                 p.setGameMode(GameMode.SURVIVAL);
                 sender.sendMessage(ChatColor.GRAY + "Toggled game mode to " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + " for " + ChatColor.WHITE + p.getDisplayName());
                 p.sendMessage(ChatColor.GRAY + sender.getName() + " set your game mode to " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + ".");
+                //And notify any users who are set to be notified
+                for(Player np : Bukkit.getOnlinePlayers()){
+                    if(np.equals(sender) || np.equals(p)) continue; //np == p, HOORAY!
+                    if(np.hasPermission("gamegenie.notify")){
+                        np.sendMessage(ChatColor.GRAY + sender.getName() + " toggled " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + " on " + p.getDisplayName());
+                    }
+                }
             } else {
                 p.setGameMode(GameMode.CREATIVE);
                 sender.sendMessage(ChatColor.GRAY +"Toggled game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY +" for "+ ChatColor.WHITE + p.getDisplayName());
                 p.sendMessage(ChatColor.GRAY + sender.getName() + " set your game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY + ".");
+                for(Player np : Bukkit.getOnlinePlayers()){
+                    if(np.equals(sender) || np.equals(p)) continue;
+                    if(np.hasPermission("gamegenie.notify")){
+                        np.sendMessage(ChatColor.GRAY + sender.getName() + " toggled " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + " on " + p.getDisplayName());
+                    }
+                }
             }
         }
         return true;
