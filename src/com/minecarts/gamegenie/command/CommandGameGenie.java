@@ -22,7 +22,19 @@ public class CommandGameGenie extends CommandHandler {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!sender.hasPermission("gamegenie.toggle")) return true;
-        if(args.length == 0) return false;
+        if(args.length == 0){
+            if(sender instanceof Player){
+                Player p = (Player) sender;
+                if(p.getGameMode() == GameMode.SURVIVAL){
+                    p.setGameMode(GameMode.CREATIVE);
+                    p.sendMessage(ChatColor.GRAY + "You toggled your game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY + ".");
+                } else {
+                    p.setGameMode(GameMode.SURVIVAL);
+                    p.sendMessage(ChatColor.GRAY + "You toggled your game mode to " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + ".");
+                }
+            }
+            return true;
+        }
         for(String playerName : args){
             List<Player> playerList  = Bukkit.matchPlayer(playerName);
             if(playerList.size() > 1) {
