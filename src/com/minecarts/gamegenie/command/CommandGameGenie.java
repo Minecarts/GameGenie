@@ -35,6 +35,18 @@ public class CommandGameGenie extends CommandHandler {
             }
             return true;
         }
+        
+        //Handle /gm list
+        if(args[0].equalsIgnoreCase("list")){
+            sender.sendMessage(ChatColor.GRAY + "----Players in Creative----");
+            for(Player p : Bukkit.getOnlinePlayers()){
+                if(p.getGameMode() == GameMode.CREATIVE){
+                    sender.sendMessage(ChatColor.GRAY + " - " + p.getDisplayName() + ChatColor.GRAY + " (" + p.getWorld().getName() + ")");
+                }
+            }
+            return true;
+        }
+        
         for(String playerName : args){
             List<Player> playerList  = Bukkit.matchPlayer(playerName);
             if(playerList.size() > 1) {

@@ -9,7 +9,7 @@ commands:
     gm:
         aliases: [gamemode]
         description: Quickly switch a player or multiple players game mode
-        usage: "/<command> [name, ...]"
+        usage: "/<command> [list | name, ...]"
 permissions:
     gamegenie.toggle:
         description: "Access to toggle the gamemode on a list of players"
