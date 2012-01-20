@@ -43,7 +43,9 @@ public class GameGenie extends JavaPlugin{
         //Attempt to restore any player inventories at this point (for reload support)
         for(Player p : playerInventory.keySet()){
             if(p.getGameMode() == GameMode.CREATIVE){
-                p.getInventory().setContents(playerInventory.remove(p));
+                if(!(p.hasPermission("gamegenie.bypasswipe"))){
+                    p.getInventory().setContents(playerInventory.remove(p));
+                }
                 System.out.println(pdf.getName()+"> " + pdf.getVersion() + " inventory restored onDisable() for " + p.getName());
             }
         }

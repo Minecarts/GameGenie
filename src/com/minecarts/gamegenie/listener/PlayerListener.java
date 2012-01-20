@@ -22,13 +22,18 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
             case SURVIVAL:
                 ItemStack[] inventory = plugin.retrieveInventory(p);
                 if(inventory != null){
-                    if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
-                    p.getInventory().setContents(inventory);
+                    if(!(p.hasPermission("gamegenie.bypasswipe"))){
+                        p.getInventory().clear();
+                        p.getInventory().setContents(inventory);
+                    }
+
                 }
                 break;
             case CREATIVE:
-                plugin.storeInventory(p,p.getInventory().getContents());
-                if(!(p.hasPermission("gamegenie.bypasswipe"))) p.getInventory().clear();
+                if(!(p.hasPermission("gamegenie.bypasswipe"))){
+                    plugin.storeInventory(p,p.getInventory().getContents());
+                    p.getInventory().clear();
+                }
                 break;
         }
     }
@@ -41,7 +46,9 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
             ItemStack[] inventory = plugin.retrieveInventory(p);
             if(inventory != null){
                 System.out.println(plugin.pdf.getName()+ "> Restored player inventory on logout for " + p.getName());
-                p.getInventory().setContents(inventory);
+                if(!(p.hasPermission("gamegenie.bypasswipe"))){
+                    p.getInventory().setContents(inventory);
+                }
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
