@@ -4,18 +4,20 @@ import com.minecarts.gamegenie.GameGenie;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerListener extends org.bukkit.event.player.PlayerListener {
+public class PlayerListener implements Listener {
     private GameGenie plugin;
     public PlayerListener(GameGenie plugin){
         this.plugin = plugin;
     }
 
-    @Override
+    @EventHandler
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent e){
         Player p = e.getPlayer();
         switch(e.getNewGameMode()){
@@ -38,7 +40,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
         //Restore their inventory if they quit
         Player p = e.getPlayer();
@@ -54,7 +56,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e){
         Player p = e.getPlayer();
         if(p.getGameMode() == GameMode.CREATIVE){

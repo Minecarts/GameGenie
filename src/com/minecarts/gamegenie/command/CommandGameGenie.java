@@ -76,7 +76,7 @@ public class CommandGameGenie extends CommandHandler {
                 for(Player np : Bukkit.getOnlinePlayers()){
                     if(np.equals(sender) || np.equals(p)) continue;
                     if(np.hasPermission("gamegenie.notify")){
-                        np.sendMessage(ChatColor.GRAY + sender.getName() + " toggled " + ChatColor.GREEN + "SURVIVAL" + ChatColor.GRAY + " on " + p.getDisplayName());
+                        np.sendMessage(ChatColor.GRAY + sender.getName() + " toggled " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY + " on " + p.getDisplayName());
                     }
                 }
             }
