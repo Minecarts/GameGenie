@@ -29,10 +29,8 @@ public class GameGenie extends JavaPlugin{
 
         PluginManager pm = Bukkit.getPluginManager();
         //Register our one event and our one listener, wooo
-        pm.registerEvent(Event.Type.PLAYER_DROP_ITEM,new PlayerListener(this), Event.Priority.Low,this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT,new PlayerListener(this), Event.Priority.Low,this);
-        pm.registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE,new PlayerListener(this), Event.Priority.Low,this);
-        
+        pm.registerEvents(new PlayerListener(this),this);
+
         //Register command
         getCommand("gm").setExecutor(new CommandGameGenie(this));
         
