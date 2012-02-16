@@ -70,6 +70,10 @@ public class CommandGameGenie extends CommandHandler {
                     }
                 }
             } else {
+                if(p.hasPermission("gamegenie.blacklist")){
+                    sender.sendMessage(p.getDisplayName() + " has been blacklisted from creative mode.");
+                    return true;
+                }
                 p.setGameMode(GameMode.CREATIVE);
                 sender.sendMessage(ChatColor.GRAY +"Toggled game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY +" for "+ ChatColor.WHITE + p.getDisplayName());
                 p.sendMessage(ChatColor.GRAY + sender.getName() + " set your game mode to " + ChatColor.YELLOW + "CREATIVE" + ChatColor.GRAY + ".");

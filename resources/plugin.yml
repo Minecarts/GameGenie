@@ -23,3 +23,6 @@ permissions:
     gamegenie.notify:
         description: "Get notified when someone changes the gamemode for another player"
         default: op
+    gamegenie.blacklist:
+        description: "Prevents this player from being put in creative mode"
+        default: false
