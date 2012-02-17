@@ -14,10 +14,10 @@ permissions:
     gamegenie.toggle:
         description: "Access to toggle the gamemode on a list of players"
         default: op
-    gamegenie.allowdrop:
+    gamegenie.bypass.drop:
         description: "Allow users to drop items in creative mode"
         default: op
-    gamegenie.bypasswipe:
+    gamegenie.bypass.wipe:
         description: "When switching modes your inventory is wiped"
         default: false
     gamegenie.notify:
@@ -26,3 +26,6 @@ permissions:
     gamegenie.blacklist:
         description: "Prevents this player from being put in creative mode"
         default: false
+    gamegenie.bypass.container:
+        description: "Bypass the container in creative mode restrictions"
+        default: op
