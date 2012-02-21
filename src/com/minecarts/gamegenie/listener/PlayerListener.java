@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -87,6 +88,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerUseContainer(PlayerInteractEvent e){
         if(e.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) return;
+        if(e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = e.getClickedBlock();
         if(clickedBlock == null) return;
