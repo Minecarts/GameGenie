@@ -1,52 +1,131 @@
 package com.minecarts.gamegenie;
 
-import com.minecarts.gamegenie.command.CommandGameGenie;
-import com.minecarts.gamegenie.listener.PlayerListener;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import java.util.Map;
 import java.util.HashMap;
 
-public class GameGenie extends JavaPlugin{
-    private HashMap<Player, ItemStack[]> playerInventory = new HashMap<Player, ItemStack[]>();
-    public PluginDescriptionFile pdf;
-    public void storeInventory(Player p, ItemStack[] is){
-        playerInventory.put(p,is);
-    }
+import org.bukkit.plugin.java.JavaPlugin;
 
-    public ItemStack[] retrieveInventory(Player p){
-        return playerInventory.remove(p);
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.*;
+import org.bukkit.event.block.Action;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
+
+import com.minecarts.gamegenie.command.CommandGameGenie;
+
+
+public class GameGenie extends JavaPlugin implements Listener {
+    private final Map<Player, InventoryState> inventories = new HashMap<Player, InventoryState>();
+    
+    @Override
+    public void onEnable() {
+        Bukkit.getPluginManager().registerEvents(this, this);
+        getCommand("gamegenie").setExecutor(new CommandGameGenie(this));
+        
+        getLogger().info(getDescription().getVersion() + " enabled.");
     }
     
-    public void onEnable(){
-        pdf = this.getDescription();
-
-        PluginManager pm = Bukkit.getPluginManager();
-        //Register our one event and our one listener, wooo
-        pm.registerEvents(new PlayerListener(this),this);
-
-        //Register command
-        getCommand("gm").setExecutor(new CommandGameGenie(this));
-        
-        System.out.println(pdf.getName()+"> " + pdf.getVersion() + " Enabled");
-    }
-
-    public void onDisable(){
-        //Attempt to restore any player inventories at this point (for reload support)
-        for(Player p : playerInventory.keySet()){
-            if(p.getGameMode() == GameMode.CREATIVE){
-                if(!(p.hasPermission("gamegenie.bypass.wipe"))){
-                    p.getInventory().setContents(playerInventory.remove(p));
-                }
-                System.out.println(pdf.getName()+"> " + pdf.getVersion() + " inventory restored onDisable() for " + p.getName());
+    @Override
+    public void onDisable() {
+        for(InventoryState state : inventories.values()) {
+            if(state.player.hasPermission("gamegenie.bypass.wipe")) continue;
+            
+            switch(state.gameMode) {
+                case SURVIVAL:
+                    state.restore();
+                    getLogger().info("Inventory restored onDisable() for " + state.player.getName());
+                    break;
             }
         }
-        System.out.println(pdf.getName()+"> " + pdf.getVersion() + " Disabled");
+        getLogger().info("Plugin disabled.");
+    }
+    
+
+    @EventHandler
+    public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+        Player player = event.getPlayer();
+        
+        if(player.hasPermission("gamegenie.bypass.wipe")) return;
+        
+        InventoryState state = inventories.get(player);
+        
+        if(state == null || state.gameMode != event.getNewGameMode()) {
+            state = new InventoryState(player);
+            inventories.put(player, state);
+            player.getInventory().clear();
+        }
+        else {
+            inventories.put(player, state.restore());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("gamegenie.bypass.wipe")) return;
+        
+        InventoryState state = inventories.get(player);
+        if(state == null) return;
+        
+        switch(state.gameMode) {
+            case SURVIVAL:
+                state.restore();
+                getLogger().info("Inventory restored on player quit for " + state.player.getName());
+                break;
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("gamegenie.bypass.drop")) return;
+        
+        switch(player.getGameMode()) {
+            case CREATIVE:
+                player.sendMessage(ChatColor.RED + "ATTENTION: " + ChatColor.RESET + "You cannot drop items in creative mode.");
+                event.setCancelled(true);
+                break;
+        }
+    }
+
+    @EventHandler
+    public void onPlayerUseEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("gamegenie.bypass.container")) return;
+        
+        switch(player.getGameMode()) {
+            case CREATIVE:
+                if(event.getRightClicked() instanceof InventoryHolder) {
+                    player.sendMessage(ChatColor.RED + "ATTENTION: " + ChatColor.RESET + "You cannot use containers in creative mode.");
+                    event.setCancelled(true);
+                }
+                break;
+        }
+    }
+
+    @EventHandler
+    public void onPlayerUseBlock(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("gamegenie.bypass.container")) return;
+        
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        
+        switch(player.getGameMode()) {
+            case CREATIVE:
+                if(event.getClickedBlock() instanceof InventoryHolder) {
+                    switch(event.getClickedBlock().getType()) {
+                        case WORKBENCH:
+                        case ENCHANTMENT_TABLE:
+                            player.sendMessage(ChatColor.RED + "ATTENTION: " + ChatColor.RESET + "You cannot use containers in creative mode.");
+                            event.setCancelled(true);
+                            break;
+                    }
+                }
+                break;
+        }
     }
 }

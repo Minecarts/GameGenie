@@ -1,15 +1,17 @@
 name: GameGenie
+description: A quick game mode switcher
+author: verrier, megabytes
+website: http://minecarts.com/
+
 main: com.minecarts.gamegenie.GameGenie
 version: ${pom.version}
-website: http://minecarts.com
-author: Verrier
-description: >
-             A quick game mode switcher
+
 commands:
-    gm:
-        aliases: [gamemode]
+    gamegenie:
+        aliases: [gg, gm]
         description: Quickly switch a player or multiple players game mode
         usage: "/<command> [list | name, ...]"
+        
 permissions:
     gamegenie.toggle:
         description: "Access to toggle the gamemode on a list of players"
